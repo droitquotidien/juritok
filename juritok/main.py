@@ -2,18 +2,16 @@ import pandas as pd
 from pathlib import Path
 import sentencepiece as spm
 import argparse
+import numpy as np
 
 
 # https://github.com/google/sentencepiece/blob/master/doc/options.md
-def build_trainer(sentence_array):
+def build_trainer(sentence_array, vocab_size=1000, input_sentence_size=100000):
     input_text = "\n\n".join(sentence_array)
 
     print("Writing input text")
     with open("jorf_2023.txt", "w", encoding="utf-8") as f:
         f.write(input_text)
-
-    vocab_size = 1000
-    input_sentence_size = 100000
 
     print("Training SentencePiece")
     # spm.SentencePieceTrainer.Train('--input=jorf_2023.txt --model_prefix=juritok --vocab_size=32000 --model_type=bpe --character_coverage=1.0 --pad_id=0 --unk_id=1 --bos_id=-1 --eos_id=-1 --pad_piece=[PAD] --unk_piece=[UNK] --bos_piece=[BOS] --eos_piece=[EOS] --user_defined_symbols=[SEP],[CLS],[MASK]')
@@ -52,25 +50,50 @@ def get_data():
     return data[5]
 
 def keep_law_only(data):
-    return data[data[5].str.startswith("«")]
+    return data[data.str.startswith("«")]
+
+def count_different_words(sentence):
+    if isinstance(sentence, pd.Series):
+        sentence = " ".join(sentence)
+    words = set()
+    words.update(sentence.split())
+    return len(words)
 
 
 def main():
     print("JURITOK - Main")
+
     argparser = argparse.ArgumentParser()
-    # argparser.add_argument("--train", action="store_true")
     args = argparser.parse_args()
 
     data = get_data()
 
     data = data.iloc[:1000]
-
-    # data = keep_law_only(data)
+    data_law = keep_law_only(data)
 
     sp_all = build_trainer(data)
-    sp_law = build_trainer(data[data.str.startswith("«")])
+    sp_law = build_trainer(data_law)
+
     test_sentence = "« Le présent décret entre en vigueur le 1er janvier 2023. »"
+
+    print()
+    print()
+
+    # print("==== PARAMETERS ====")
+    # print()
+    # print()
+
+    print("==== TESTING MODEL WITH ALL JORF ====")
+    print("Number of different words: ", count_different_words(data))
+    print("Vocab size: ", sp_all.GetPieceSize())
     test_model(sp_all, test_sentence)
+
+    print()
+    print()
+
+    print("==== TESTING MODEL WITH LAW ARTICLES ONLY ====")
+    print("Number of different words: ", count_different_words(data_law))
+    print("Vocab size: ", sp_law.GetPieceSize())
     test_model(sp_law, test_sentence)
 
 
