@@ -7,7 +7,20 @@ authors = [
 ]
 dependencies = [
     "sentencepiece",
+    "pandas",
+    "pyarrow"
 ]
+
+    
+
+[tool.setuptools]
+package-dir = {"juritok"="juritok"}
+
+[project.scripts]
+jtk = "juritok.main:main"
+
+[tool.setuptools.package-data]
+juritok = ["juritok/*.feather", "juritok/*.csv"]
 
 [build-system]
 requires = ["setuptools >= 61.0"]
