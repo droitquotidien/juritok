@@ -24,7 +24,9 @@ with open("all_lines.txt", "w", encoding="utf-8") as f:
         f.write(l)
         f.write("\n")
 
-print(f"Training tokenizers, with {len(df)} and then 10000 lines (takes 1min to run)...")
+print(
+    f"Training tokenizers, with {len(df)} and then 10000 lines (takes 1min to run)..."
+)
 spm.SentencePieceTrainer.train(
     input="all_lines.txt", model_prefix="m", vocab_size=11002, minloglevel=4
 )
