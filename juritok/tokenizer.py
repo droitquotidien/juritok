@@ -1,8 +1,8 @@
 import sentencepiece as spm
 
 # paths
-train_file = 'jorf/jorf.txt'
-model_prefix = 'modele/modele'
+train_file = 'jorf.txt'
+model_prefix = 'modele'
 
 # parameters
 vocab_size = 10000
