@@ -1,6 +1,7 @@
 # Juritok
-Tokenisation des textes du JO et des textes consolidés
-
+Tokenisation des textes du JO et des textes consolidés  
+  
+*Note : all csv files were removed form the repository because git would not allow to push (too much data)*
 ## First step : combining all JO from 2018 to 2022 (keeping 2023 to test the tokenization).
 Opening csv files using the separator '|' and keeping only the last line, where the text we are interested in are contained.  
 When trying to read it, it appeared that there were words with upper and lower cases that might be considered as different words when they are not. The choice to only have lower cases was made.  
