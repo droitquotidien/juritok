@@ -29,7 +29,6 @@ def analysis(model, test_path):
 
     # Calculating vocabulary usage rate, i.e. number of distinct tokens used in test data compared to the vocab size 
     tokens = [token for sentence in results for token in sentence]
-    print(len(set(tokens)))
     vocab_usage_rate = len(set(tokens))/model.GetPieceSize()
     print(f"Vocab usage rate on test data: {vocab_usage_rate}")
 
